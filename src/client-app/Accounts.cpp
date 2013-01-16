@@ -23,7 +23,7 @@ Accounts::AccountForm::AccountForm() {
 	from = new QLineEdit();
 	from_label->setBuddy(from);
 
-	QLabel *host_label = new QLabel(tr("Host:"));
+	QLabel *host_label = new QLabel(tr("SMTP Host:"));
 	host = new QLineEdit();
 	host_label->setBuddy(host);
 
@@ -36,8 +36,9 @@ Accounts::AccountForm::AccountForm() {
 	pass->setEchoMode(QLineEdit::Password);
 	pass_label->setBuddy(pass);
 
-	QLabel *port_label = new QLabel(tr("Port:"));
-	port = new QLineEdit();
+	QLabel *port_label = new QLabel(tr("SMTP Port:"));
+	port = new QLineEdit("25");
+	port->setInputMask("999999999");
 	port_label->setBuddy(port);
 
 	QLabel *description_label = new QLabel(tr("Description:"));
@@ -73,4 +74,15 @@ Accounts::AccountForm::AccountForm() {
 	layout->setColumnMinimumWidth(1, 250);
 	setLayout(layout);
 
+}
+
+bool Accounts::AccountForm::validate() {
+	if (name->text().isEmpty() || email->text().isEmpty() ||
+		from->text().isEmpty() || host->text().isEmpty() ||
+		user->text().isEmpty() || pass->text().isEmpty() ||
+		port->text().isEmpty()) {
+		error_msg = "Some fields are empty";
+		return false;
+	}
+	// TODO: Check server connection
 }

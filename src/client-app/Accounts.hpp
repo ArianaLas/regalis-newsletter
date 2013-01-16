@@ -4,6 +4,7 @@
 #include <QLineEdit>
 #include <QTextEdit>
 #include <QWidget>
+#include <QString>
 
 class Accounts {
 	public:
@@ -15,6 +16,7 @@ class Accounts {
 class Accounts::AccountForm : public QWidget {
 	public:
 		AccountForm();
+		bool validate();
 	
 	protected:
 		QLineEdit *name;
@@ -25,6 +27,7 @@ class Accounts::AccountForm : public QWidget {
 		QLineEdit *pass;
 		QLineEdit *port;
 		QTextEdit *description;
+		QString error_msg;
 };
 
 #endif
