@@ -1,6 +1,11 @@
 #include <QLabel>
 #include <QGridLayout>
+#include <QSqlDatabase>
+#include <QSqlQuery>
+#include <QSqlError>
+
 #include "Accounts.hpp"
+#include "RegalisNewsletter.hpp"
 
 Accounts::Accounts() {
 
@@ -85,6 +90,29 @@ bool Accounts::AccountForm::validate() {
 		return false;
 	}
 	// TODO: Check server connection
+	return true;
+}
+
+bool Accounts::AccountForm::insert() {
+	QSqlDatabase *db = RegalisNewsletter::get()->getDatabase();
+	if (!db->isOpen()) {
+		error_msg = tr("Database connection is closed");
+		return false;
+	}
+	QSqlQuery query(*db);
+	query.prepare("insert into accounts(name, email, from, host, user, pass, port, description) values(?, ?, ?, ?, ?, ?, ?, ?)");
+	query.addBindValue(getName());
+	query.addBindValue(getEmail());
+	query.addBindValue(getFrom());
+	query.addBindValue(getHost());
+	query.addBindValue(getUser());
+	query.addBindValue(getPass());
+	query.addBindValue(getPort());
+	query.addBindValue(getDescription());
+	if (!query.exec()) {
+		error_msg = query.lastError().text();
+		return false;
+	}
 	return true;
 }
 
