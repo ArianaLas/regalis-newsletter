@@ -10,13 +10,22 @@ class Accounts {
 	public:
 		Accounts();
 		class AccountForm;
-		AccountForm *getNewAccountForm() const;
+		static AccountForm *getNewAccountForm();
 };
 
 class Accounts::AccountForm : public QWidget {
 	public:
 		AccountForm();
 		bool validate();
+		QString getName() const;
+		QString getEmail() const;
+		QString getFrom() const;
+		QString getHost() const;
+		QString getUser() const;
+		QString getPass() const;
+		QString getPort() const;
+		QString getDescription() const;
+		QString getErrorMessage() const;
 	
 	protected:
 		QLineEdit *name;

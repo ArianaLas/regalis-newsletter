@@ -6,7 +6,7 @@ Accounts::Accounts() {
 
 }
 
-Accounts::AccountForm *Accounts::getNewAccountForm() const {
+Accounts::AccountForm *Accounts::getNewAccountForm() {
 	return new AccountForm();
 }
 
@@ -81,8 +81,45 @@ bool Accounts::AccountForm::validate() {
 		from->text().isEmpty() || host->text().isEmpty() ||
 		user->text().isEmpty() || pass->text().isEmpty() ||
 		port->text().isEmpty()) {
-		error_msg = "Some fields are empty";
+		error_msg = tr("Some fields are empty");
 		return false;
 	}
 	// TODO: Check server connection
+	return true;
+}
+
+QString Accounts::AccountForm::getName() const {
+	return name->text();
+}
+
+QString Accounts::AccountForm::getEmail() const {
+	return email->text();
+}
+
+QString Accounts::AccountForm::getFrom() const {
+	return from->text();
+}
+
+QString Accounts::AccountForm::getHost() const {
+	return host->text();
+}
+
+QString Accounts::AccountForm::getUser() const {
+	return user->text();
+}
+
+QString Accounts::AccountForm::getPass() const {
+	return pass->text();
+}
+
+QString Accounts::AccountForm::getPort() const {
+	return port->text();
+}
+
+QString Accounts::AccountForm::getDescription() const {
+	return description->toPlainText();
+}
+
+QString Accounts::AccountForm::getErrorMessage() const {
+	return error_msg;
 }
