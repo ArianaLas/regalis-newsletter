@@ -1,0 +1,7 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+ <qresource>
+     <file>res/images/wizard-watermark.png</file>
+ </qresource>
+ </RCC>
+ <!-- vim:ft=xml : -->
