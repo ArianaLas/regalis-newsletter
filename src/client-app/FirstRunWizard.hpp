@@ -5,6 +5,8 @@
 #include <QWizardPage>
 #include <QLineEdit>
 
+#include "Accounts.hpp"
+
 
 class FirstRunWizard : public QWizard {
 	public:
@@ -15,6 +17,7 @@ class FirstRunWizard : public QWizard {
 		QWizardPage *createDatabasePage() const;
 		QWizardPage *createNewAccountPage() const;
 		class DatabasePage;
+		class AccountPage;
 };
 
 class FirstRunWizard::DatabasePage : public QWizardPage {
@@ -27,6 +30,15 @@ class FirstRunWizard::DatabasePage : public QWizardPage {
 		QLineEdit *db;
 		QLineEdit *user;
 		QLineEdit *pass;
+};
+
+class FirstRunWizard::AccountPage : public QWizardPage {
+	public:
+		AccountPage();
+		~AccountPage();
+		bool validatePage();
+	protected:
+		Accounts::AccountForm *form;
 };
 
 #endif

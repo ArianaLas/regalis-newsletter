@@ -17,7 +17,7 @@ FirstRunWizard::FirstRunWizard() : QWizard() {
 	addPage(createNewAccountPage());
 	setOptions(QWizard::NoBackButtonOnStartPage);
 	setWizardStyle(QWizard::ModernStyle);
-	setWindowTitle(QString("Regalis Newsletter v%1").arg(REGALIS_NEWSLETTER_VERSION));
+	setWindowTitle(QString("Regalis Newsletter v%1 - first run").arg(REGALIS_NEWSLETTER_VERSION));
 	setPixmap(QWizard::WatermarkPixmap, QPixmap(":res/images/wizard-watermark.png"));
 }
 
@@ -39,11 +39,7 @@ QWizardPage *FirstRunWizard::createDatabasePage() const {
 }
 
 QWizardPage *FirstRunWizard::createNewAccountPage() const {
-	QWizardPage *page = new QWizardPage();
-	page->setTitle("Configure your default e-mail account");
-	Accounts accounts;
-	page->setLayout(accounts.getNewAccountForm()->layout());
-	return page;
+	return new AccountPage();
 }
 
 FirstRunWizard::DatabasePage::DatabasePage() : QWizardPage() {
@@ -107,6 +103,24 @@ bool FirstRunWizard::DatabasePage::validatePage() {
 		return false;
 	}
 	return true;
+}
+
+FirstRunWizard::AccountPage::AccountPage() : QWizardPage() {
+	form = Accounts::getNewAccountForm();
+	setTitle("Configure your default e-mail account");
+	setLayout(form->layout());
+}
+
+bool FirstRunWizard::AccountPage::validatePage() {
+	if (!form->validate()) {
+		QMessageBox::warning(wizard(), tr("Unable to create new account"), form->getErrorMessage());
+		return false;
+	}
+	return true;
+}
+
+FirstRunWizard::AccountPage::~AccountPage() {
+	delete form;
 }
 
 FirstRunWizard::~FirstRunWizard() {
