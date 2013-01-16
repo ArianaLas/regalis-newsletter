@@ -86,7 +86,7 @@ bool FirstRunWizard::DatabasePage::validatePage() {
 		QMessageBox::warning(wizard(), tr("Fill all fields"), tr("You have to fill all fields in this step.."));		
 		return false;
 	}
-	QSqlDatabase *database = RegalisNewsletter::get()->getDatabase();		
+	QSqlDatabase *database = RegalisNewsletter::get()->getDatabase();
 	database->setHostName(host->text());
 	database->setPort(port->text().toInt());
 	database->setDatabaseName(db->text());

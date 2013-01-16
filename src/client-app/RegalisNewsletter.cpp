@@ -43,5 +43,6 @@ RegalisNewsletter::Database::Database() : QSqlDatabase("QMYSQL") {
 
 RegalisNewsletter::~RegalisNewsletter() {
 	delete settings;
+	delete db;
 }
 
