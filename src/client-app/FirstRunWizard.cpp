@@ -8,11 +8,13 @@
 
 #include "RegalisNewsletter.hpp"
 #include "FirstRunWizard.hpp"
+#include "Accounts.hpp"
 #include "version.hpp"
 
 FirstRunWizard::FirstRunWizard() : QWizard() {
 	addPage(createWelcomePage());
 	addPage(createDatabasePage());
+	addPage(createNewAccountPage());
 	setOptions(QWizard::NoBackButtonOnStartPage);
 	setWizardStyle(QWizard::ModernStyle);
 	setWindowTitle(QString("Regalis Newsletter v%1").arg(REGALIS_NEWSLETTER_VERSION));
@@ -36,6 +38,14 @@ QWizardPage *FirstRunWizard::createDatabasePage() const {
 	return new DatabasePage();
 }
 
+QWizardPage *FirstRunWizard::createNewAccountPage() const {
+	QWizardPage *page = new QWizardPage();
+	page->setTitle("Configure your default e-mail account");
+	Accounts accounts;
+	page->setLayout(accounts.getNewAccountForm()->layout());
+	return page;
+}
+
 FirstRunWizard::DatabasePage::DatabasePage() : QWizardPage() {
 	setTitle(tr("Please configure your database connection"));
 	QLabel *msg = new QLabel(tr("This newsletter use MySQL database"));
@@ -46,7 +56,7 @@ FirstRunWizard::DatabasePage::DatabasePage() : QWizardPage() {
 	host_label->setBuddy(host);
 
 	QLabel *port_label = new QLabel(tr("Port:"));
-	port = new QLineEdit("5900");
+	port = new QLineEdit("3306");
 	port_label->setBuddy(port);
 	port->setInputMask("9999999999");
 
@@ -55,7 +65,7 @@ FirstRunWizard::DatabasePage::DatabasePage() : QWizardPage() {
 	db_label->setBuddy(db);
 
 	QLabel *user_label = new QLabel(tr("User:"));
-	user = new QLineEdit("regalis_newsletter");
+	user = new QLineEdit("rnewsletter");
 	user_label->setBuddy(user);
 
 	QLabel *pass_label = new QLabel(tr("Password:"));

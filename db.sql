@@ -56,6 +56,7 @@ create table if not exists templates {
 create table if not exists accounts {
 	id int unsigned not null auto_increment primary key,
 	name char(255) not null,
+	email char(255) not null,
 	from char(255),
 	host char(255) not null,
 	user char(255) not null,

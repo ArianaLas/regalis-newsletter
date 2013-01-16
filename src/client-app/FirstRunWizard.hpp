@@ -13,6 +13,7 @@ class FirstRunWizard : public QWizard {
 	protected:
 		QWizardPage *createWelcomePage() const;
 		QWizardPage *createDatabasePage() const;
+		QWizardPage *createNewAccountPage() const;
 		class DatabasePage;
 };
 
