@@ -17,6 +17,7 @@ class Accounts::AccountForm : public QWidget {
 	public:
 		AccountForm();
 		bool validate();
+		bool insert();
 		QString getName() const;
 		QString getEmail() const;
 		QString getFrom() const;
