@@ -92,14 +92,14 @@ bool FirstRunWizard::DatabasePage::validatePage() {
 		QMessageBox::warning(wizard(), tr("Fill all fields"), tr("You have to fill all fields in this step.."));		
 		return false;
 	}
-	QSqlDatabase *database = RegalisNewsletter::get()->getDatabase();
-	database->setHostName(host->text());
-	database->setPort(port->text().toInt());
-	database->setDatabaseName(db->text());
-	database->setUserName(user->text());
-	database->setPassword(pass->text());
-	if (!database->open()) {
-		QMessageBox::critical(wizard(), tr("Connection error"), database->lastError().text());
+	QSqlDatabase database = QSqlDatabase::database();
+	database.setHostName(host->text());
+	database.setPort(port->text().toInt());
+	database.setDatabaseName(db->text());
+	database.setUserName(user->text());
+	database.setPassword(pass->text());
+	if (!database.open()) {
+		QMessageBox::critical(wizard(), tr("Connection error"), database.lastError().text());
 		return false;
 	}
 	return true;

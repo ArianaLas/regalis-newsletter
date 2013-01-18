@@ -22,20 +22,11 @@ class RegalisNewsletter : public QObject {
 		/** Exec application, run first run wizzard or main window */
 		void exec();
 
-		QSqlDatabase *getDatabase();
-
 		/** Default destructor */
 		~RegalisNewsletter();
 	protected:
-		class Database;
 		RegalisNewsletter();
 		QSettings *settings;
-		Database *db;
-};
-
-class RegalisNewsletter::Database : public QSqlDatabase {
-	public:
-		Database();
 };
 
 #endif

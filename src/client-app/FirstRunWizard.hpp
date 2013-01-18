@@ -1,12 +1,11 @@
-#ifndef __FIRST_RUN_WIZZARD_
-#define __FIRST_RUN_WIZZARD_
+#ifndef __FIRST_RUN_WIZZARD_HPP_
+#define __FIRST_RUN_WIZZARD_HPP_
 
 #include <QWizard>
 #include <QWizardPage>
 #include <QLineEdit>
 
 #include "Accounts.hpp"
-
 
 class FirstRunWizard : public QWizard {
 	public:

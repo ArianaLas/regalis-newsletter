@@ -94,13 +94,17 @@ bool Accounts::AccountForm::validate() {
 }
 
 bool Accounts::AccountForm::insert() {
-	QSqlDatabase *db = RegalisNewsletter::get()->getDatabase();
-	if (!db->isOpen()) {
+	QSqlDatabase db = QSqlDatabase::database();
+	if (!db.isOpen()) {
 		error_msg = tr("Database connection is closed");
 		return false;
 	}
-	QSqlQuery query(*db);
-	query.prepare("insert into accounts(name, email, from, host, user, pass, port, description) values(?, ?, ?, ?, ?, ?, ?, ?)");
+	QSqlQuery query(db);
+	
+	if (!query.prepare("insert into accounts(name, email, from, host, user, pass, port, description) values(?, ?, ?, ?, ?, ?, ?, ?)")) {
+		error_msg = tr("Internal error...");
+		return false;
+	}
 	query.addBindValue(getName());
 	query.addBindValue(getEmail());
 	query.addBindValue(getFrom());

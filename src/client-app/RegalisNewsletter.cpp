@@ -1,12 +1,14 @@
 #include <iostream>
 
+#include <QSqlDatabase>
+
 #include "RegalisNewsletter.hpp"
 #include "FirstRunWizard.hpp"
 using namespace std;
 
 RegalisNewsletter::RegalisNewsletter() {
 	settings = new QSettings("Regalis", "regalis-newsletter");
-	db = new Database();
+	QSqlDatabase::addDatabase("QMYSQL");
 }
 
 RegalisNewsletter *RegalisNewsletter::get() {
@@ -33,16 +35,7 @@ void RegalisNewsletter::exec() {
 	}
 }
 
-QSqlDatabase *RegalisNewsletter::getDatabase() {
-	return (QSqlDatabase*)db;
-}
-
-RegalisNewsletter::Database::Database() : QSqlDatabase("QMYSQL") {
-
-}
-
 RegalisNewsletter::~RegalisNewsletter() {
 	delete settings;
-	delete db;
 }
 
