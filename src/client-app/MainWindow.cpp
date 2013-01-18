@@ -1,0 +1,86 @@
+#include <QIcon>
+#include <QActionGroup>
+#include <QMenu>
+#include <QMenuBar>
+#include <QToolBar>
+
+#include "MainWindow.hpp"
+#include "Subscribers.hpp"
+#include "version.hpp"
+
+MainWindow::MainWindow() : QMainWindow(0) {
+	setWindowTitle(QString("Regalis Newsletter v%1").arg(REGALIS_NEWSLETTER_VERSION));
+	setMinimumSize(800, 500);
+	buildMenu();
+	buildToolbar();
+	initCentralWidget();
+}
+
+void MainWindow::buildMenu() {
+
+	quit = new QAction(QIcon::fromTheme("application-exit"), tr("&Quit"), this);
+	quit->setIconVisibleInMenu(true);
+
+	new_newsletter = new QAction(QIcon::fromTheme("document-new"), tr("&New newsletter"), this);
+	new_newsletter->setIconVisibleInMenu(true);
+
+	QActionGroup *view_group = new QActionGroup(this);
+	view_group->setExclusive(true);
+	show_dashboard = view_group->addAction(QIcon::fromTheme("go-home"), tr("&Dashboard"));
+	show_dashboard->setCheckable(true);
+	show_dashboard->setIconVisibleInMenu(true);
+	show_dashboard->setChecked(true);
+
+	show_subscribers = view_group->addAction(QIcon::fromTheme("x-office-address-book"), tr("&Subscribers"));
+	show_subscribers->setCheckable(true);
+	show_subscribers->setIconVisibleInMenu(true);
+
+	show_newsletters_history = view_group->addAction(QIcon::fromTheme("document-open-recent"), tr("Newsletters &history"));
+	show_newsletters_history->setCheckable(true);
+	show_newsletters_history->setIconVisibleInMenu(true);
+
+	about = new QAction(QIcon::fromTheme("help-about"), tr("&About"), this);
+
+	QMenu *file_menu = menuBar()->addMenu(tr("&File"));
+	QMenu *view_menu = menuBar()->addMenu(tr("&View"));
+	QMenu *help_menu = menuBar()->addMenu(tr("&Help"));
+	
+	file_menu->addAction(new_newsletter);
+	file_menu->addSeparator();
+	file_menu->addAction(quit);
+
+	view_menu->addAction(show_dashboard);
+	view_menu->addAction(show_subscribers);
+	view_menu->addAction(show_newsletters_history);
+
+	help_menu->addAction(about);
+
+}
+
+void MainWindow::buildToolbar() {
+	QToolBar *toolbar = addToolBar(tr("Main toolbar"));	
+	toolbar->addAction(new_newsletter);
+	toolbar->addSeparator();
+	toolbar->addAction(show_dashboard);
+	toolbar->addAction(show_subscribers);
+	toolbar->addAction(show_newsletters_history);
+}
+
+void MainWindow::initCentralWidget() {
+	central_widget = new QStackedWidget(this);
+	subscribers = new Subscribers(this);
+	central_widget->addWidget(subscribers);
+	setCentralWidget(central_widget);
+}
+
+MainWindow::~MainWindow() {
+	delete quit;
+	delete new_newsletter;
+	delete show_dashboard;
+	delete show_subscribers;
+	delete show_newsletters_history;
+	delete about;
+	delete central_widget;
+	delete subscribers;
+}
+

@@ -8,8 +8,8 @@ DEPENDPATH += .
 INCLUDEPATH += .
 
 # Input
-HEADERS += FirstRunWizard.hpp RegalisNewsletter.hpp Accounts.hpp version.hpp
-SOURCES += FirstRunWizard.cpp main.cpp RegalisNewsletter.cpp Accounts.cpp
+HEADERS += FirstRunWizard.hpp RegalisNewsletter.hpp Accounts.hpp MainWindow.hpp Subscribers.hpp version.hpp
+SOURCES += FirstRunWizard.cpp main.cpp RegalisNewsletter.cpp Accounts.cpp MainWindow.cpp Subscribers.cpp
 RESOURCES += resources.qrc
 
 QT += sql

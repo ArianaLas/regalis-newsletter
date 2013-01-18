@@ -5,6 +5,9 @@
 #include <QObject>
 #include <QSqlDatabase>
 
+class MainWindow;
+class FirstRunWizard;
+
 class RegalisNewsletter : public QObject {
 	public:
 		
@@ -22,10 +25,15 @@ class RegalisNewsletter : public QObject {
 		/** Exec application, run first run wizzard or main window */
 		void exec();
 
+
 		/** Default destructor */
 		~RegalisNewsletter();
 	protected:
 		RegalisNewsletter();
+		void initMainWindow();
+		bool initDatabase();
+		MainWindow *main_window;
+		FirstRunWizard *wizard;
 		QSettings *settings;
 };
 

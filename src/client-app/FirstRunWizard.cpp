@@ -116,6 +116,7 @@ bool FirstRunWizard::AccountPage::validatePage() {
 		QMessageBox::warning(wizard(), tr("Unable to create new account"), form->getErrorMessage());
 		return false;
 	}
+		QMessageBox::information(wizard(), tr("Success"), "Inser OK");
 	return true;
 }
 
