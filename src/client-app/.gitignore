@@ -2,3 +2,4 @@ Makefile
 client-app
 qrc_resources.cpp
 *.o
+*.vim
