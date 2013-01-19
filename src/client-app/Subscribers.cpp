@@ -1,9 +1,27 @@
 #include <QVBoxLayout>
+#include <QSqlQuery>
+#include <QModelIndex>
+#include <QVariant>
 
 #include "Subscribers.hpp"
 
 Subscribers::Subscribers(QWidget *parent) : QWidget(parent) {
-	model = new SqlModel();
+	model = new QSqlTableModel();
+	model->setTable("subscribers");
+	model->setEditStrategy(QSqlTableModel::OnFieldChange);
+	model->select();
+
+	model->setHeaderData(0, Qt::Horizontal, tr("#id"));
+	model->setHeaderData(1, Qt::Horizontal, tr("Name"));
+	model->setHeaderData(2, Qt::Horizontal, tr("Surname"));
+	model->setHeaderData(3, Qt::Horizontal, tr("E-mail"));
+	model->setHeaderData(4, Qt::Horizontal, tr("Country"));
+	model->setHeaderData(5, Qt::Horizontal, tr("Province"));
+	model->setHeaderData(6, Qt::Horizontal, tr("City"));
+	model->setHeaderData(7, Qt::Horizontal, tr("Address"));
+	model->setHeaderData(8, Qt::Horizontal, tr("Sex"));
+	model->setHeaderData(9, Qt::Horizontal, tr("Birthday"));
+
 	table_view = new QTableView(this);
 	table_view->setModel(model);
 
@@ -13,25 +31,76 @@ Subscribers::Subscribers(QWidget *parent) : QWidget(parent) {
 	
 }
 
-Subscribers::SqlModel::SqlModel() : QSqlQueryModel() {
-	setQuery("select id, name, surname, email, country, province, city, address, sex, birthday from subscribers order by registered desc");	
-	setHeaderData(0, Qt::Horizontal, QObject::tr("#id"));
-	setHeaderData(1, Qt::Horizontal, QObject::tr("Name"));
-	setHeaderData(2, Qt::Horizontal, QObject::tr("Surname"));
-	setHeaderData(3, Qt::Horizontal, QObject::tr("E-mail"));
-	setHeaderData(4, Qt::Horizontal, QObject::tr("Country"));
-	setHeaderData(5, Qt::Horizontal, QObject::tr("Province"));
-	setHeaderData(6, Qt::Horizontal, QObject::tr("City"));
-	setHeaderData(7, Qt::Horizontal, QObject::tr("Address"));
-	setHeaderData(8, Qt::Horizontal, QObject::tr("Sex"));
-	setHeaderData(9, Qt::Horizontal, QObject::tr("Birthday"));
+bool Subscribers::setName(int id, const QString &name) {
+	QSqlQuery query;
+	query.prepare("update subscribers set name=? where id=?");
+	query.addBindValue(name);
+	query.addBindValue(id);
+	return query.exec();
 }
 
-Qt::ItemFlags Subscribers::SqlModel::flags(const QModelIndex &index) const {
-	return QSqlQueryModel::flags(index);	
+bool Subscribers::setSurname(int id, const QString &surname) {
+	QSqlQuery query;
+	query.prepare("update subscribers set surname=? where id=?");
+	query.addBindValue(surname);
+	query.addBindValue(id);
+	return query.exec();
 }
 
+bool Subscribers::setEmail(int id, const QString &email) {
+	QSqlQuery query;
+	query.prepare("update subscribers set email=? where id=?");
+	query.addBindValue(email);
+	query.addBindValue(id);
+	return query.exec();
+}
 
-bool Subscribers::SqlModel::setData(const QModelIndex &index, const QVariant &value, int role) {
-	return false;
+bool Subscribers::setCountry(int id, const QString &country) {
+	QSqlQuery query;
+	query.prepare("update subscribers set country=? where id=?");
+	query.addBindValue(country);
+	query.addBindValue(id);
+	return query.exec();
+}
+
+bool Subscribers::setProvince(int id, const QString &province) {
+	QSqlQuery query;
+	query.prepare("update subscribers set province=? where id=?");
+	query.addBindValue(province);
+	query.addBindValue(id);
+	return query.exec();
+}
+
+bool Subscribers::setCity(int id, const QString &city) {
+	QSqlQuery query;
+	query.prepare("update subscribers set city=? where id=?");
+	query.addBindValue(city);
+	query.addBindValue(id);
+	return query.exec();
+}
+
+bool Subscribers::setAddress(int id, const QString &address) {
+	QSqlQuery query;
+	query.prepare("update subscribers set address=? where id=?");
+	query.addBindValue(address);
+	query.addBindValue(id);
+	return query.exec();
+}
+
+bool Subscribers::setSex(int id, const QString &sex) {
+	if (sex != "M" || sex != "F")
+		return false;
+	QSqlQuery query;
+	query.prepare("update subscribers set sex=? where id=?");
+	query.addBindValue(sex);
+	query.addBindValue(id);
+	return query.exec();
+}
+
+bool Subscribers::setBirthday(int id, const QString &birthday) {
+	QSqlQuery query;
+	query.prepare("update subscribers set birthday=? where id=?");
+	query.addBindValue(birthday);
+	query.addBindValue(id);
+	return query.exec();
 }
