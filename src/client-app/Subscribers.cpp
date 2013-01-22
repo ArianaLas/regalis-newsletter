@@ -2,6 +2,8 @@
 #include <QSqlQuery>
 #include <QModelIndex>
 #include <QVariant>
+#include <QAction>
+#include <QMenu>
 
 #include "Subscribers.hpp"
 
@@ -25,10 +27,22 @@ Subscribers::Subscribers(QWidget *parent) : QWidget(parent) {
 	table_view = new QTableView(this);
 	table_view->setModel(model);
 	table_view->resizeColumnsToContents();
+	table_view->setContextMenuPolicy(Qt::CustomContextMenu);
+	connect(table_view, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(tableContextMenu(const QPoint&)));
 
 	QVBoxLayout *layout = new QVBoxLayout(this);
 	layout->addWidget(table_view);
 	setLayout(layout);
+}
+
+void Subscribers::tableContextMenu(const QPoint &pos) {
+	QPoint globalPos = table_view->viewport()->mapToGlobal(pos);
+	table_view->selectRow(table_view->indexAt(pos).row());
+	QMenu menu;
+	QAction *remove = menu.addAction(QIcon::fromTheme("list-remove"), tr("Remove this row"));
+	remove->setIconVisibleInMenu(true);
+	menu.addAction(tr("Do something with this row..."));
+	QAction *action = menu.exec(globalPos);
 }
 
 Subscribers::TableModel::TableModel() : QSqlTableModel() {}
