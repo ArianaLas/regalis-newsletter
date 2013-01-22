@@ -8,6 +8,7 @@
 
 class Subscribers;
 class Dashboard;
+class Preferences;
 
 class MainWindow : public QMainWindow {
 	Q_OBJECT;
@@ -20,6 +21,7 @@ class MainWindow : public QMainWindow {
 		void buildToolbar();
 		void initCentralWidget();
 		QAction *quit;
+		QAction *show_preferences;
 		QAction *new_newsletter;
 		QAction *show_dashboard;
 		QAction *show_subscribers;
@@ -28,11 +30,13 @@ class MainWindow : public QMainWindow {
 		QStackedWidget *central_widget;
 		Subscribers *subscribers;
 		Dashboard *dashboard;
+		Preferences *preferences;
 	
 	protected slots:
 		void showDashboard(bool checked);
 		void showSubscribers(bool checked);
 		void showNewslettersHistory(bool checked);
+		void showPreferences();
 
 };
 

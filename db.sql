@@ -101,14 +101,14 @@ create table if not exists newsletters_headers (
 
 insert into settings(name, int_value) values ('enable_email_confirmation', 1);
 insert into settings(name, int_value) values ('enable_auto_email_confirmation', 1);
-insert into settings(name, char_value) values ('auto_email_confirmation_template', '');
-insert into settings(name, char_value) values ('email_unregister_template', '');
+insert into settings(name, int_value) values ('auto_email_confirmation_template', -1);
+insert into settings(name, int_value) values ('email_unregister_template', -1);
 insert into settings(name, int_value) values ('auto_email_confirmation_account', -1);
 insert into settings(name, int_value) values ('enable_email_mx_verification', 1);
 insert into settings(name, int_value) values ('register_form_name_required', 0);
 insert into settings(name, int_value) values ('register_form_surname_required', 0);
 insert into settings(name, int_value) values ('register_form_city_required', 0);
-insert into settings(name, int_value) values ('register_form_povince_required', 0);
+insert into settings(name, int_value) values ('register_form_province_required', 0);
 insert into settings(name, int_value) values ('register_form_country_required', 0);
 insert into settings(name, int_value) values ('register_form_birthday_required', 0);
 insert into settings(name, int_value) values ('register_form_language_required', 0);

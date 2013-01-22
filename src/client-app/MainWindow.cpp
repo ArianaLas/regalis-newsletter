@@ -7,12 +7,14 @@
 #include "MainWindow.hpp"
 #include "Subscribers.hpp"
 #include "Dashboard.hpp"
+#include "Preferences.hpp"
 #include "version.hpp"
 
 MainWindow::MainWindow() : QMainWindow(0) {
 	setWindowTitle(QString("Regalis Newsletter v%1").arg(REGALIS_NEWSLETTER_VERSION));
 	setMinimumSize(800, 500);
 	buildMenu();
+	preferences = new Preferences();
 	buildToolbar();
 	initCentralWidget();
 }
@@ -24,6 +26,10 @@ void MainWindow::buildMenu() {
 
 	new_newsletter = new QAction(QIcon::fromTheme("document-new"), tr("&New newsletter"), this);
 	new_newsletter->setIconVisibleInMenu(true);
+
+	show_preferences = new QAction(QIcon::fromTheme("preferences-other"), tr("&Preferences"), this);
+	show_preferences->setIconVisibleInMenu(true);
+	connect(show_preferences, SIGNAL(triggered()), this, SLOT(showPreferences()));
 
 	QActionGroup *view_group = new QActionGroup(this);
 	view_group->setExclusive(true);
@@ -46,12 +52,15 @@ void MainWindow::buildMenu() {
 	about = new QAction(QIcon::fromTheme("help-about"), tr("&About"), this);
 
 	QMenu *file_menu = menuBar()->addMenu(tr("&File"));
+	QMenu *edit_menu = menuBar()->addMenu(tr("&Edit"));
 	QMenu *view_menu = menuBar()->addMenu(tr("&View"));
 	QMenu *help_menu = menuBar()->addMenu(tr("&Help"));
 	
 	file_menu->addAction(new_newsletter);
 	file_menu->addSeparator();
 	file_menu->addAction(quit);
+
+	edit_menu->addAction(show_preferences);
 
 	view_menu->addAction(show_dashboard);
 	view_menu->addAction(show_subscribers);
@@ -92,12 +101,19 @@ void MainWindow::showSubscribers(bool checked) {
 void MainWindow::showNewslettersHistory(bool checked) {
 }
 
+void MainWindow::showPreferences() {
+	preferences->show();
+}
+
 MainWindow::~MainWindow() {
 	delete quit;
 	delete new_newsletter;
 	delete show_dashboard;
+	delete dashboard;
 	delete show_subscribers;
 	delete show_newsletters_history;
+	delete show_preferences;
+	delete preferences;
 	delete about;
 	delete central_widget;
 	delete subscribers;
