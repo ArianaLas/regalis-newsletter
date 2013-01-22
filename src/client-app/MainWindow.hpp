@@ -20,6 +20,7 @@ class MainWindow : public QMainWindow {
 		void buildToolbar();
 		void initCentralWidget();
 		QAction *quit;
+		QAction *preferences;
 		QAction *new_newsletter;
 		QAction *show_dashboard;
 		QAction *show_subscribers;
@@ -33,6 +34,7 @@ class MainWindow : public QMainWindow {
 		void showDashboard(bool checked);
 		void showSubscribers(bool checked);
 		void showNewslettersHistory(bool checked);
+		void showPreferences();
 
 };
 

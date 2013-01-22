@@ -25,6 +25,9 @@ void MainWindow::buildMenu() {
 	new_newsletter = new QAction(QIcon::fromTheme("document-new"), tr("&New newsletter"), this);
 	new_newsletter->setIconVisibleInMenu(true);
 
+	preferences = new QAction(QIcon::fromTheme("preferences-other"), tr("&Preferences"), this);
+	preferences->setIconVisibleInMenu(true);
+
 	QActionGroup *view_group = new QActionGroup(this);
 	view_group->setExclusive(true);
 	show_dashboard = view_group->addAction(QIcon::fromTheme("go-home"), tr("&Dashboard"));
@@ -46,12 +49,15 @@ void MainWindow::buildMenu() {
 	about = new QAction(QIcon::fromTheme("help-about"), tr("&About"), this);
 
 	QMenu *file_menu = menuBar()->addMenu(tr("&File"));
+	QMenu *edit_menu = menuBar()->addMenu(tr("&Edit"));
 	QMenu *view_menu = menuBar()->addMenu(tr("&View"));
 	QMenu *help_menu = menuBar()->addMenu(tr("&Help"));
 	
 	file_menu->addAction(new_newsletter);
 	file_menu->addSeparator();
 	file_menu->addAction(quit);
+
+	edit_menu->addAction(preferences);
 
 	view_menu->addAction(show_dashboard);
 	view_menu->addAction(show_subscribers);
