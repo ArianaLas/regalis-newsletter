@@ -6,6 +6,7 @@
 
 #include "MainWindow.hpp"
 #include "Subscribers.hpp"
+#include "Dashboard.hpp"
 #include "version.hpp"
 
 MainWindow::MainWindow() : QMainWindow(0) {
@@ -30,14 +31,17 @@ void MainWindow::buildMenu() {
 	show_dashboard->setCheckable(true);
 	show_dashboard->setIconVisibleInMenu(true);
 	show_dashboard->setChecked(true);
+	connect(show_dashboard, SIGNAL(toggled(bool)), this, SLOT(showDashboard(bool)));
 
 	show_subscribers = view_group->addAction(QIcon::fromTheme("x-office-address-book"), tr("&Subscribers"));
 	show_subscribers->setCheckable(true);
 	show_subscribers->setIconVisibleInMenu(true);
+	connect(show_subscribers, SIGNAL(toggled(bool)), this, SLOT(showSubscribers(bool)));
 
 	show_newsletters_history = view_group->addAction(QIcon::fromTheme("document-open-recent"), tr("Newsletters &history"));
 	show_newsletters_history->setCheckable(true);
 	show_newsletters_history->setIconVisibleInMenu(true);
+	connect(show_newsletters_history, SIGNAL(toggled(bool)), this, SLOT(showNewslettersHistory(bool)));
 
 	about = new QAction(QIcon::fromTheme("help-about"), tr("&About"), this);
 
@@ -69,8 +73,23 @@ void MainWindow::buildToolbar() {
 void MainWindow::initCentralWidget() {
 	central_widget = new QStackedWidget(this);
 	subscribers = new Subscribers(this);
+	dashboard = new Dashboard(this);
+	central_widget->addWidget(dashboard);
 	central_widget->addWidget(subscribers);
 	setCentralWidget(central_widget);
+}
+
+void MainWindow::showDashboard(bool checked) {	
+	if (checked)
+		central_widget->setCurrentWidget(dashboard);
+}
+
+void MainWindow::showSubscribers(bool checked) {
+	if (checked)
+		central_widget->setCurrentWidget(subscribers);
+}
+
+void MainWindow::showNewslettersHistory(bool checked) {
 }
 
 MainWindow::~MainWindow() {

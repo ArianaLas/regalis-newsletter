@@ -7,6 +7,7 @@
 #include <QStackedWidget>
 
 class Subscribers;
+class Dashboard;
 
 class MainWindow : public QMainWindow {
 	Q_OBJECT;
@@ -26,6 +27,13 @@ class MainWindow : public QMainWindow {
 		QAction *about;
 		QStackedWidget *central_widget;
 		Subscribers *subscribers;
+		Dashboard *dashboard;
+	
+	protected slots:
+		void showDashboard(bool checked);
+		void showSubscribers(bool checked);
+		void showNewslettersHistory(bool checked);
+
 };
 
 #endif
