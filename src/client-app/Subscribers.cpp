@@ -34,9 +34,9 @@ Subscribers::Subscribers(QWidget *parent) : QWidget(parent) {
 Subscribers::TableModel::TableModel() : QSqlTableModel() {}
 
 QString Subscribers::TableModel::selectStatement() const {
-	QString sql = QString("select id, name, surname, email, country, province, city, address, sex, birthday from %1").arg(tableName());
+	QString sql = QString("select id, name, surname, email, country, province, city, address, sex, birthday from %1 ").arg(tableName());
 	if (!filter().isEmpty())
-		sql += QString(" where %1");
+		sql += QString("where %1 ").arg(filter());
 	sql += orderByClause();
 	return sql;
 }
