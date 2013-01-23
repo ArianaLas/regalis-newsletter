@@ -4,6 +4,11 @@
 #include <QVariant>
 #include <QAction>
 #include <QMenu>
+#include <QHeaderView>
+#include <QPoint>
+#include <QMessageBox>
+#include <QSqlRecord>
+#include <QSqlError>
 
 #include "Subscribers.hpp"
 
@@ -37,12 +42,23 @@ Subscribers::Subscribers(QWidget *parent) : QWidget(parent) {
 
 void Subscribers::tableContextMenu(const QPoint &pos) {
 	QPoint globalPos = table_view->viewport()->mapToGlobal(pos);
-	table_view->selectRow(table_view->indexAt(pos).row());
+	int selected_row = table_view->indexAt(pos).row();
+	table_view->selectRow(selected_row);
 	QMenu menu;
 	QAction *remove = menu.addAction(QIcon::fromTheme("list-remove"), tr("Remove this row"));
 	remove->setIconVisibleInMenu(true);
 	menu.addAction(tr("Do something with this row..."));
 	QAction *action = menu.exec(globalPos);
+	if (action == remove) {
+		int id_to_delete = model->record(selected_row).value("id").toInt();
+		QString email = model->record(selected_row).value("email").toString();
+		QMessageBox::StandardButton answer = QMessageBox::question(this, tr("Need confirmation"), QString(tr("Are you sure you want to remove #%1 (%2)?")).arg(QString::number(id_to_delete)).arg(email), QMessageBox::Yes | QMessageBox::No);
+		if (answer == QMessageBox::Yes) {
+			if (!model->removeRows(selected_row, 1)) {
+				QMessageBox::critical(this, tr("Unable to remove row..."), QString(tr("Unable to remove this row. Error message: %1")).arg(model->lastError().text()));
+			}
+		}
+	}
 }
 
 Subscribers::TableModel::TableModel() : QSqlTableModel() {}

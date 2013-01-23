@@ -77,6 +77,7 @@ void MainWindow::buildToolbar() {
 	toolbar->addAction(show_dashboard);
 	toolbar->addAction(show_subscribers);
 	toolbar->addAction(show_newsletters_history);
+	toolbar->setMovable(false);
 }
 
 void MainWindow::initCentralWidget() {
