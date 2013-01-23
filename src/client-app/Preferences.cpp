@@ -35,6 +35,9 @@ void Preferences::init() {
 	register_form_birthday_required = new QCheckBox(tr("Birthday"));
 	register_form_language_required = new QCheckBox("Language");
 
+	
+
+
 	QLabel *auto_email_confirmation_template_label = new QLabel(tr("Auto email confirmation template"));
 	QLabel *email_unregister_template_label = new QLabel(tr("Email unregister template"));
 	QLabel *auto_email_confirmation_account_label = new QLabel(tr("Auto email confirmation account"));
@@ -51,7 +54,7 @@ void Preferences::init() {
 	core_layout->addWidget(enable_email_mx_verification, 5, 0);
 
 	QLabel *form_label = new QLabel(tr("Select fields below if required"));
-	form_layout->addWidget(form_label, 0, 0);
+	form_layout->addWidget(form_label, 0, 0, 1, 2);
 	form_layout->addWidget(register_form_name_required,1, 0);
 	form_layout->addWidget(register_form_surname_required, 1, 1);
 	form_layout->addWidget(register_form_city_required, 2, 0);
@@ -62,6 +65,7 @@ void Preferences::init() {
 
 	core_box->setLayout(core_layout);
 	form_box->setLayout(form_layout);
+
 	vbox->addWidget(core_box);
 	vbox->addWidget(form_box);
 }

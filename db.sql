@@ -68,7 +68,8 @@ create table if not exists accounts (
 create table if not exists settings (
 	name char(100) not null primary key,
 	int_value int default null,
-	char_value char(255) default null
+	char_value char(255) default null,
+	bool_value bool default null
 );
 
 create table if not exists newsletters (
@@ -99,20 +100,20 @@ create table if not exists newsletters_headers (
 	value char(255)
 );
 
-insert into settings(name, int_value) values ('enable_email_confirmation', 1);
-insert into settings(name, int_value) values ('enable_auto_email_confirmation', 1);
+insert into settings(name, bool_value) values ('enable_email_confirmation', 1);
+insert into settings(name, bool_value) values ('enable_auto_email_confirmation', 1);
 insert into settings(name, int_value) values ('auto_email_confirmation_template', -1);
 insert into settings(name, int_value) values ('email_unregister_template', -1);
 insert into settings(name, int_value) values ('auto_email_confirmation_account', -1);
-insert into settings(name, int_value) values ('enable_email_mx_verification', 1);
-insert into settings(name, int_value) values ('register_form_name_required', 0);
-insert into settings(name, int_value) values ('register_form_surname_required', 0);
-insert into settings(name, int_value) values ('register_form_city_required', 0);
-insert into settings(name, int_value) values ('register_form_province_required', 0);
-insert into settings(name, int_value) values ('register_form_country_required', 0);
-insert into settings(name, int_value) values ('register_form_birthday_required', 0);
-insert into settings(name, int_value) values ('register_form_language_required', 0);
-insert into settings(name, int_value) values ('register_form_sex_required', 0);
-insert into settings(name, int_value) values ('register_form_use_campaigns', 0);
-insert into settings(name, int_value) values ('register_form_save_user_agent', 0);
+insert into settings(name, bool_value) values ('enable_email_mx_verification', 1);
+insert into settings(name, bool_value) values ('register_form_name_required', 0);
+insert into settings(name, bool_value) values ('register_form_surname_required', 0);
+insert into settings(name, bool_value) values ('register_form_city_required', 0);
+insert into settings(name, bool_value) values ('register_form_province_required', 0);
+insert into settings(name, bool_value) values ('register_form_country_required', 0);
+insert into settings(name, bool_value) values ('register_form_birthday_required', 0);
+insert into settings(name, bool_value) values ('register_form_language_required', 0);
+insert into settings(name, bool_value) values ('register_form_sex_required', 0);
+insert into settings(name, bool_value) values ('register_form_use_campaigns', 0);
+insert into settings(name, bool_value) values ('register_form_save_user_agent', 0);
 
