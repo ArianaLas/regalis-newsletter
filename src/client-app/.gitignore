@@ -1,5 +1,5 @@
 Makefile
-client-app
+regalis-newsletter
 qrc_resources.cpp
 *.o
 *.vim
