@@ -16,6 +16,7 @@ Subscribers::Subscribers(QWidget *parent) : QWidget(parent) {
 	model = new TableModel();
 	model->setTable("subscribers");
 	model->setEditStrategy(QSqlTableModel::OnFieldChange);
+	model->setSort(0, Qt::AscendingOrder);
 	model->select();
 
 	model->setHeaderData(0, Qt::Horizontal, tr("#id"));

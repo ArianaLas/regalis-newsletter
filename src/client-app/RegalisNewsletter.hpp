@@ -25,7 +25,6 @@ class RegalisNewsletter : public QObject {
 		/** Exec application, run first run wizzard or main window */
 		void exec();
 
-
 		/** Default destructor */
 		~RegalisNewsletter();
 	protected:

@@ -6,7 +6,7 @@
 
 RegalisNewsletter::RegalisNewsletter() {
 	settings = new QSettings("Regalis", "regalis-newsletter");
-	QSqlDatabase::addDatabase("QMYSQL");
+	QSqlDatabase::addDatabase("QPSQL");
 	wizard = NULL;
 }
 
@@ -16,11 +16,11 @@ RegalisNewsletter *RegalisNewsletter::get() {
 }
 
 bool RegalisNewsletter::isFirstRun() const {
-	return (settings->contains("mysql/host") &&
-			settings->contains("mysql/port") &&
-			settings->contains("mysql/user") &&
-			settings->contains("mysql/pass") &&
-			settings->contains("mysql/db"));
+	return (settings->contains("psql/host") &&
+			settings->contains("psql/port") &&
+			settings->contains("psql/user") &&
+			settings->contains("psql/pass") &&
+			settings->contains("psql/db"));
 }
 
 void RegalisNewsletter::exec() {
@@ -41,9 +41,9 @@ void RegalisNewsletter::initMainWindow() {
 bool RegalisNewsletter::initDatabase() {
 	QSqlDatabase db = QSqlDatabase::database();
 	db.setHostName("localhost");
-	db.setUserName("rnewsletter");
-	db.setPassword("regalis_newsletter");
-	db.setPort(3306);
+	db.setUserName("rnewslettercli");
+	db.setPassword("regalis_newsletter_client");
+	db.setPort(5432);
 	db.setDatabaseName("regalis_newsletter");
 	db.open();
 	return true;

@@ -1,9 +1,14 @@
 /*
  * Regalis Newsletter
  * Database initialization scripts
- * Run as user with grant option
+ * Run as privilaged user
  */
 
-create user 'rnewsletter'@'localhost' identified by 'regalis_newsletter';
-create database regalis_newsletter;
-grant create, select, insert, update, delete, alter, drop on regalis_newsletter.* to 'rnewsletter'@'localhost'
+create role rnewslettercli with login password 'regalis_newsletter_client';
+create database regalis_newsletter owner rnewslettercli;
+grant all on database regalis_newsletter to rnewslettercli;
+grant all on all tables in schema public to rnewslettercli;
+
+create role rnewslettersrv with login password 'regalis_newsletter_server';
+grant connect on database regalis_newsletter to rnewslettersrv;
+grant insert, update(confirmed) on subscribers to rnewslettersrv;

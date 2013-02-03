@@ -1,119 +1,141 @@
+
+/* Data types */
+
+create type sex_t as enum ('male', 'female');
+create type access_t as enum ('public', 'private');
+
+/* Tables */
+
 create table if not exists subscribers (
-	id int unsigned not null auto_increment primary key,
-	name char(100),
-	surname char(100),
-	email char(150) not null,
-	city char(100),
-	province char(100),
-	address char(100),
-	country char(100),
-	sex enum('M','F'),
-	birthday date,
-	user_agent char(255),
-	registered date not null,
-	confirmed date default null
+	id serial primary key,
+	name varchar(100),
+	surname varchar(100),
+	email varchar(150) not null,
+	city varchar(100),
+	province varchar(100),
+	address varchar(100),
+	country varchar(100),
+	sex sex_t,
+	birthday timestamp,
+	user_agent varchar(255),
+	registered timestamp not null,
+	confirmed timestamp default null
 );
 
 create table if not exists languages (
-	code char(20) not null primary key,
-	name char(255) not null
+	code varchar(20) primary key,
+	name varchar(255) not null
 );
 
 create table if not exists subscribers_languages (
-	subscriber_id int unsigned not null,
-	language_code int unsigned not null
+	subscriber_id integer not null references subscribers(id) on delete cascade,
+	language_code varchar(20) not null references languages(code) on delete cascade,
+	primary key(subscriber_id, language_code)
 );
 
 create table if not exists groups (
-	id int unsigned not null auto_increment primary key,
-	name char(255),
-	description tinytext
+	id serial primary key,
+	name varchar(255) not null,
+	description text default null
 );
 
 create table if not exists group_members (
-	subscriber_id int unsigned not null,
-	group_id int unsigned not null
+	subscriber_id integer not null references subscribers(id) on delete cascade,
+	group_id integer not null references groups(id) on delete cascade,
+	primary key(subscriber_id, group_id)
 );
 
 create table if not exists campaigns (
-	id int unsigned not null auto_increment primary key,
-	name char(255) not null,
-	description tinytext,
-	type enum('public', 'private')
+	id serial primary key,
+	name varchar(255) not null,
+	description text,
+	type access_t not null default 'private'
 );
 
 create table if not exists campaigns_members (
-	subscriber_id int unsigned not null,
-	campaign_int int unsigned not null
+	subscriber_id integer not null references subscribers(id) on delete cascade,
+	campaign_id integer not null references campaigns(id) on delete cascade,
+	primary key(subscriber_id, campaign_id)
 );
 
 create table if not exists templates (
-	id int unsigned not null auto_increment primary key,
-	name char(255) not null,
+	id serial primary key,
+	name varchar(255) not null,
 	content text not null
 );
 
 create table if not exists accounts (
-	id int unsigned not null auto_increment primary key,
-	name char(255) not null,
-	email char(255) not null,
-	header_from char(255),
-	smtp_host char(255) not null,
-	smtp_user char(255) not null,
-	smtp_pass char(255) not null,
-	smtp_port char(255) not null,
-	description tinytext
+	id serial primary key,
+	name varchar(255) not null,
+	email varchar(255) not null,
+	header_from varchar(255),
+	smtp_host varchar(255) not null,
+	smtp_user varchar(255) not null,
+	smtp_pass varchar(255) not null,
+	smtp_port varchar(255) not null,
+	description text
 );
 
 create table if not exists settings (
-	name char(100) not null primary key,
-	int_value int default null,
-	char_value char(255) default null,
+	name varchar(100) not null primary key,
+	int_value integer default null,
+	varchar_value varchar(255) default null,
 	bool_value bool default null
 );
 
 create table if not exists newsletters (
-	id int unsigned not null auto_increment primary key,
-	name char(200) not null,
-	account_id int unsigned not null,
-	subject char(255) not null,
+	id serial primary key,
+	name varchar(200) not null,
+	account_id integer not null references accounts(id) on delete set null,
+	subject varchar(255) not null,
 	body text,
 	body_sent text default null,
-	sent date default null
+	sent timestamp default null
 );
 
 create table if not exists newsletters_campaigns (
-	newsletter_id int unsigned not null,
-	campaign_id int unsigned not null
+	newsletter_id integer not null references newsletters(id) on delete cascade,
+	campaign_id integer not null references campaigns(id) on delete cascade,
+	primary key(newsletter_id, campaign_id)
 );
 
 create table if not exists newsletters_receivers (
-	newsletter_id int unsigned not null,
-	subscriber_id int unsigned not null,
-	sent date default null,
-	description tinytext default null
+	newsletter_id integer not null references newsletters(id) on delete cascade,
+	subscriber_id integer not null references subscribers(id) on delete cascade,
+	sent timestamp default null,
+	description text default null,
+	primary key(newsletter_id, subscriber_id)
 );
 
 create table if not exists newsletters_headers (
-	newsletter_id int unsigned not null,
-	name char(255),
-	value char(255)
+	newsletter_id integer not null references newsletters(id) on delete cascade,
+	name varchar(255),
+	value varchar(255),
+	primary key(newsletter_id, name)
 );
 
-insert into settings(name, bool_value) values ('enable_email_confirmation', 1);
-insert into settings(name, bool_value) values ('enable_auto_email_confirmation', 1);
+create table if not exists user_variables (
+	name varchar(100) primary key,
+	value varchar(255) not null
+);
+
+/* Default settings */
+
+insert into settings(name, int_value) values ('database_version', 0);
+insert into settings(name, bool_value) values ('enable_email_confirmation', '1');
+insert into settings(name, bool_value) values ('enable_auto_email_confirmation', '1');
 insert into settings(name, int_value) values ('auto_email_confirmation_template', -1);
 insert into settings(name, int_value) values ('email_unregister_template', -1);
 insert into settings(name, int_value) values ('auto_email_confirmation_account', -1);
-insert into settings(name, bool_value) values ('enable_email_mx_verification', 1);
-insert into settings(name, bool_value) values ('register_form_name_required', 0);
-insert into settings(name, bool_value) values ('register_form_surname_required', 0);
-insert into settings(name, bool_value) values ('register_form_city_required', 0);
-insert into settings(name, bool_value) values ('register_form_province_required', 0);
-insert into settings(name, bool_value) values ('register_form_country_required', 0);
-insert into settings(name, bool_value) values ('register_form_birthday_required', 0);
-insert into settings(name, bool_value) values ('register_form_language_required', 0);
-insert into settings(name, bool_value) values ('register_form_sex_required', 0);
-insert into settings(name, bool_value) values ('register_form_use_campaigns', 0);
-insert into settings(name, bool_value) values ('register_form_save_user_agent', 0);
+insert into settings(name, bool_value) values ('enable_email_mx_verification', '1');
+insert into settings(name, bool_value) values ('register_form_name_required', '0');
+insert into settings(name, bool_value) values ('register_form_surname_required', '0');
+insert into settings(name, bool_value) values ('register_form_city_required', '0');
+insert into settings(name, bool_value) values ('register_form_province_required', '0');
+insert into settings(name, bool_value) values ('register_form_country_required', '0');
+insert into settings(name, bool_value) values ('register_form_birthday_required', '0');
+insert into settings(name, bool_value) values ('register_form_language_required', '0');
+insert into settings(name, bool_value) values ('register_form_sex_required', '0');
+insert into settings(name, bool_value) values ('register_form_use_campaigns', '0');
+insert into settings(name, bool_value) values ('register_form_save_user_agent', '0');
 
