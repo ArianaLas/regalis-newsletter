@@ -53,7 +53,7 @@ void Subscribers::tableContextMenu(const QPoint &pos) {
 	remove->setIconVisibleInMenu(true);
 
 	QSqlQuery query(QString("select id, name, (select count(*) from group_members where subscriber_id=%1 and group_id=id) as is_member from groups order by name;").arg(model_id));
-	QMenu *groups_menu;
+	QMenu *groups_menu = 0;
 	if (query.size() > 0) {
 		groups_menu = menu.addMenu(tr("Groups"));
 		while (query.next()) {
@@ -66,7 +66,7 @@ void Subscribers::tableContextMenu(const QPoint &pos) {
 	}
 
 	query.exec(QString("select id, name, (select count(*) from campaigns_members where subscriber_id=%1 and campaign_id=id) from campaigns;").arg(model_id));
-	QMenu *campaigns_menu;
+	QMenu *campaigns_menu = 0;
 	if (query.size() > 0) {
 		campaigns_menu = menu.addMenu(tr("Campaigns"));
 		while (query.next()) {
