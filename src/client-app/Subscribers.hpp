@@ -17,7 +17,7 @@ class Subscribers : public QWidget {
 		TableModel *model;
 		QTableView *table_view;
 	protected slots:
-		void tableContextMenu(const QPoint &pos);	
+		void tableContextMenu(const QPoint &pos);
 };
 
 class Subscribers::TableModel : public QSqlTableModel {
