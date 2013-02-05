@@ -21,23 +21,17 @@ Preferences::Preferences(QWidget *parent) : QWidget(parent) {
 	form_model = new QSqlTableModel();
 	form_model->setTable("settings");
 	form_model->setFilter("name like 'register\_form\_%'");
-	form_model->setEditStrategy(QSqlTableModel::OnManualSubmit);
+	form_model->setEditStrategy(QSqlTableModel::OnFieldChange);
 
 	form_mapper = new QDataWidgetMapper();
 	form_mapper->setModel(form_model);
 	form_mapper->setOrientation(Qt::Vertical);
+	init();
 }
 
 void Preferences::show() {
 	if (form_model->select()) {
 		form_mapper->setCurrentIndex(3);
-	std::cout << "_______________________________________" << std::endl;
-	std::cout << form_model->rowCount() << std::endl;
-		for (int i = 0; i < form_model->rowCount(); ++i) {
-			std::cout << form_model->record(i).value("name").toString().toUtf8().constData() << std::endl;
-		}
-	std::cout << "_______________________________________" << std::endl;
-		init();
 		QWidget::show();
 	} else {
 		QMessageBox::critical(0, tr("Unable to load configuration"), QString(tr("Unable to get configuration from database: %1")).arg(form_model->lastError().text()));
@@ -46,10 +40,7 @@ void Preferences::show() {
 
 int Preferences::getRowFromName(const QString &name) const {
 	for (int i = 0; i < form_model->rowCount(); ++i) {
-	//	std::cout << form_model->record(i).value("name").toString().toUtf8().constData() << std::endl;
 		if (name == form_model->record(i).value("name").toString()) {
-	//		std::cout << "id: " << i << std::endl;
-
 			return i;
 		}
 	}
@@ -84,7 +75,6 @@ void Preferences::init() {
 	QCheckBox *register_form_save_user_agent = new QCheckBox("Save user agent");
 
 	form_mapper->addMapping(register_form_name_required, getRowFromName("register_form_name_required"));
-	std::cout << form_mapper->mappedSection(register_form_name_required) << std::endl;
 	form_mapper->addMapping(register_form_surname_required, getRowFromName("register_form_surname_required"));
 	form_mapper->addMapping(register_form_city_required, getRowFromName("register_form_city_required"));
 	form_mapper->addMapping(register_form_province_required, getRowFromName("register_form_province_required"));
