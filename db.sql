@@ -119,6 +119,19 @@ create table if not exists user_variables (
 	value varchar(255) not null
 );
 
+create table if not exists attachments (
+	id serial primary key,
+	file_name varchar(255) not null,
+	mime varchar(255) not null default 'application/octet-stream',
+	content bytea not null
+);
+
+create table if not exists attachments_newsletters (
+	attachment_id integer not null references attachments(id) on delete cascade,
+	newsletter_id integer not null references newsletters(id) on delete cascade,
+	primary key(attachment_id, newsletter_id)
+);
+
 /* Default settings */
 
 insert into settings(name, int_value) values ('database_version', 0);

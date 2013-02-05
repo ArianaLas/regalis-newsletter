@@ -98,3 +98,35 @@ insert into subscribers(name, surname, email, registered) values ('Name97', 'Sur
 insert into subscribers(name, surname, email, registered) values ('Name98', 'Surname98', 'example-mail9898@domain.com', current_timestamp);
 insert into subscribers(name, surname, email, registered) values ('Name99', 'Surname99', 'example-mail9999@domain.com', current_timestamp);
 insert into subscribers(name, surname, email, registered) values ('Name100', 'Surname100', 'example-mail100100@domain.com', current_timestamp);
+
+
+-- GROUPS
+insert into groups(name, description) values('Employees', 'Company internal issues directed to all employees.');
+insert into groups(name, description) values('Managers', 'Emails directed to managers.');
+insert into groups(name, description) values('Sales', 'Messages directed to Sale Department employees.');
+
+insert into group_members(subscriber_id, group_id) values(1, 3);
+insert into group_members(subscriber_id, group_id) values(2, 3);
+insert into group_members(subscriber_id, group_id) values(3, 3);
+insert into group_members(subscriber_id, group_id) values(4, 3);
+insert into group_members(subscriber_id, group_id) values(5, 1);
+insert into group_members(subscriber_id, group_id) values(6, 2);
+insert into group_members(subscriber_id, group_id) values(7, 2);
+insert into group_members(subscriber_id, group_id) values(8, 1);
+insert into group_members(subscriber_id, group_id) values(9, 2);
+
+-- CAMPAIGNS
+
+insert into campaigns(name, description, type) values('News', 'New offers.', 'public');
+insert into campaigns(name, description, type) values('Sales', 'Overrated products.', 'public');
+insert into campaigns(name, description, type) values('Discounts', 'For customers who bought a discount.', 'private');
+
+insert into campaigns_members(subscriber_id, campaign_id) values(1, 3);
+insert into campaigns_members(subscriber_id, campaign_id) values(4, 1);
+insert into campaigns_members(subscriber_id, campaign_id) values(6, 1);
+insert into campaigns_members(subscriber_id, campaign_id) values(10, 3);
+insert into campaigns_members(subscriber_id, campaign_id) values(11, 3);
+insert into campaigns_members(subscriber_id, campaign_id) values(12, 1);
+insert into campaigns_members(subscriber_id, campaign_id) values(13, 3);
+insert into campaigns_members(subscriber_id, campaign_id) values(14, 1);
+insert into campaigns_members(subscriber_id, campaign_id) values(15, 2);
