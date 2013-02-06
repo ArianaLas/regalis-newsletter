@@ -2,13 +2,15 @@
 #include <QGridLayout>
 #include <QSqlDatabase>
 #include <QSqlQuery>
+#include <QSqlRecord>
+#include <QSqlField>
 #include <QSqlError>
+#include <QDebug>
 
 #include "Accounts.hpp"
 #include "RegalisNewsletter.hpp"
 
 Accounts::Accounts() {
-
 }
 
 Accounts::AccountForm *Accounts::getNewAccountForm() {
@@ -47,7 +49,7 @@ Accounts::AccountForm::AccountForm() {
 	port_label->setBuddy(port);
 
 	QLabel *description_label = new QLabel(tr("Description:"));
-	description = new QTextEdit();
+	description = new QTextEdit(tr("Default account"));
 	description_label->setBuddy(description);
 
 	QGridLayout *layout = new QGridLayout();
@@ -81,6 +83,14 @@ Accounts::AccountForm::AccountForm() {
 
 }
 
+bool Accounts::AccountForm::initModel() {
+	model = new QSqlTableModel();
+	model->setTable("accounts");
+	model->setEditStrategy(QSqlTableModel::OnManualSubmit);
+	model->setSort(1, Qt::AscendingOrder);
+	return model->select();
+}
+
 bool Accounts::AccountForm::validate() {
 	if (name->text().isEmpty() || email->text().isEmpty() ||
 		from->text().isEmpty() || host->text().isEmpty() ||
@@ -94,27 +104,18 @@ bool Accounts::AccountForm::validate() {
 }
 
 bool Accounts::AccountForm::insert() {
-	QSqlDatabase db = QSqlDatabase::database();
-	if (!db.isOpen()) {
-		error_msg = tr("Database connection is closed");
-		return false;
-	}
-	QSqlQuery query(db);
-	
-	if (!query.prepare("insert into accounts(name, email, from, host, user, pass, port, description) values(?, ?, ?, ?, ?, ?, ?, ?)")) {
-		error_msg = tr("Internal error...");
-		return false;
-	}
-	query.addBindValue(getName());
-	query.addBindValue(getEmail());
-	query.addBindValue(getFrom());
-	query.addBindValue(getHost());
-	query.addBindValue(getUser());
-	query.addBindValue(getPass());
-	query.addBindValue(getPort());
-	query.addBindValue(getDescription());
-	if (!query.exec()) {
-		error_msg = query.lastError().text();
+	QSqlRecord record = model->record();
+	record.remove(0);
+	record.setValue("name", getName());
+	record.setValue("email", getEmail());
+	record.setValue("header_from", getFrom());
+	record.setValue("smtp_host", getHost());
+	record.setValue("smtp_user", getUser());
+	record.setValue("smtp_pass", getPass());
+	record.setValue("smtp_port", getPort().toInt());
+	record.setValue("description", getDescription());
+	if (!(model->insertRecord(-1, record) && model->submitAll())) {
+		error_msg = model->lastError().text();
 		return false;
 	}
 	return true;

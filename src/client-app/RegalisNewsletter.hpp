@@ -25,15 +25,26 @@ class RegalisNewsletter : public QObject {
 		/** Exec application, run first run wizzard or main window */
 		void exec();
 
+		/** Read settings and initialize global database connection 
+		 * @return: true after successfull initialization
+		 */
+		bool initDatabase();
+
+		/** Get error message returned by initDatabase() */
+		QString initDatabaseError();
+
+		/** Get pointer to settings object */
+		QSettings *getSettings();
+
 		/** Default destructor */
 		~RegalisNewsletter();
 	protected:
 		RegalisNewsletter();
 		void initMainWindow();
-		bool initDatabase();
 		MainWindow *main_window;
 		FirstRunWizard *wizard;
 		QSettings *settings;
+		QString init_error;
 };
 
 #endif
