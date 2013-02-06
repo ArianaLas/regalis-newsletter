@@ -46,13 +46,17 @@ Subscribers::Subscribers(QWidget *parent) : QWidget(parent) {
 
 QToolBar *Subscribers::getToolBar() {
 	if (tool_bar == NULL) {
+		buildToolBar();
+	}
+	return tool_bar;
+}
+
+void Subscribers::buildToolBar() {
 		tool_bar = new QToolBar(tr("Subscribers toolbar"));
 		tool_bar->setMovable(false);
 		tool_bar->addAction(tr("Groups"));
 		tool_bar->addAction(tr("Campaigns"));
 		tool_bar->addAction(tr("Sort"));
-	}
-	return tool_bar;
 }
 
 void Subscribers::tableContextMenu(const QPoint &pos) {

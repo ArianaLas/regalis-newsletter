@@ -11,6 +11,7 @@
 #include <QCheckBox>
 #include <QLineEdit>
 #include <QComboBox>
+#include <QModelIndex>
 
 #include "Preferences.hpp"
 
@@ -26,12 +27,12 @@ Preferences::Preferences(QWidget *parent) : QWidget(parent) {
 	form_mapper = new QDataWidgetMapper();
 	form_mapper->setModel(form_model);
 	form_mapper->setOrientation(Qt::Vertical);
+	form_mapper->setCurrentIndex(3);
 	init();
 }
 
 void Preferences::show() {
 	if (form_model->select()) {
-		form_mapper->setCurrentIndex(3);
 		QWidget::show();
 	} else {
 		QMessageBox::critical(0, tr("Unable to load configuration"), QString(tr("Unable to get configuration from database: %1")).arg(form_model->lastError().text()));
@@ -74,7 +75,11 @@ void Preferences::init() {
 	QCheckBox *register_form_use_campaigns = new QCheckBox("Use campaigns");
 	QCheckBox *register_form_save_user_agent = new QCheckBox("Save user agent");
 
-	form_mapper->addMapping(register_form_name_required, getRowFromName("register_form_name_required"));
+	std::cout << form_mapper->rootIndex().column() << std::endl;
+	std::cout << form_mapper->rootIndex().row() << std::endl;
+	
+	form_mapper->addMapping(register_form_name_required, 2);
+	std::cout << form_mapper->mappedSection(register_form_name_required) << std::endl;
 	form_mapper->addMapping(register_form_surname_required, getRowFromName("register_form_surname_required"));
 	form_mapper->addMapping(register_form_city_required, getRowFromName("register_form_city_required"));
 	form_mapper->addMapping(register_form_province_required, getRowFromName("register_form_province_required"));

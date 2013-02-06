@@ -16,6 +16,7 @@ class Subscribers : public QWidget {
 		QToolBar *getToolBar();
 	protected:
 		class TableModel;
+		void buildToolBar();
 		TableModel *model;
 		QTableView *table_view;
 		QToolBar *tool_bar;
