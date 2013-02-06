@@ -60,6 +60,7 @@ void Subscribers::buildToolBar() {
 		tool_bar->setMovable(false);
 		tool_bar->addAction(tr("Groups"));
 		tool_bar->addAction(tr("Campaigns"));
+		tool_bar->setStyleSheet("QToolBar { border: 0px; }");
 
 		QToolButton *sort_button = new QToolButton();
 		QAction *sort_action = new QAction("Sort", 0);
