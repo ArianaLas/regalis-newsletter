@@ -5,6 +5,7 @@
 #include <QTextEdit>
 #include <QWidget>
 #include <QString>
+#include <QSqlTableModel>
 
 class Accounts {
 	public:
@@ -17,6 +18,7 @@ class Accounts::AccountForm : public QWidget {
 	public:
 		AccountForm();
 		bool validate();
+		bool initModel();
 		bool insert();
 		QString getName() const;
 		QString getEmail() const;
@@ -38,6 +40,7 @@ class Accounts::AccountForm : public QWidget {
 		QLineEdit *port;
 		QTextEdit *description;
 		QString error_msg;
+		QSqlTableModel *model;
 };
 
 #endif
