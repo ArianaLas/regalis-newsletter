@@ -28,6 +28,7 @@ class MainWindow : public QMainWindow {
 		QAction *show_newsletters_history;
 		QAction *about;
 		QStackedWidget *central_widget;
+		QStackedWidget *stacked_tool_bar;
 		Subscribers *subscribers;
 		Dashboard *dashboard;
 		Preferences *preferences;

@@ -15,8 +15,8 @@ MainWindow::MainWindow() : QMainWindow(0) {
 	setMinimumSize(800, 500);
 	buildMenu();
 	preferences = new Preferences();
-	buildToolbar();
 	initCentralWidget();
+	buildToolbar();
 }
 
 void MainWindow::buildMenu() {
@@ -78,6 +78,11 @@ void MainWindow::buildToolbar() {
 	toolbar->addAction(show_subscribers);
 	toolbar->addAction(show_newsletters_history);
 	toolbar->setMovable(false);
+
+	stacked_tool_bar = new QStackedWidget(toolbar);
+	stacked_tool_bar->addWidget(dashboard->getToolBar());
+	stacked_tool_bar->addWidget(subscribers->getToolBar());
+	toolbar->addWidget(stacked_tool_bar);
 }
 
 void MainWindow::initCentralWidget() {
@@ -90,13 +95,17 @@ void MainWindow::initCentralWidget() {
 }
 
 void MainWindow::showDashboard(bool checked) {	
-	if (checked)
+	if (checked) {
 		central_widget->setCurrentWidget(dashboard);
+		stacked_tool_bar->setCurrentWidget(dashboard->getToolBar());
+	}
 }
 
 void MainWindow::showSubscribers(bool checked) {
-	if (checked)
+	if (checked) {
 		central_widget->setCurrentWidget(subscribers);
+		stacked_tool_bar->setCurrentWidget(subscribers->getToolBar());
+	}
 }
 
 void MainWindow::showNewslettersHistory(bool checked) {
