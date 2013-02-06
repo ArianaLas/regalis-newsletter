@@ -69,7 +69,7 @@ void Subscribers::buildToolBar() {
 		sort_button->setPopupMode(QToolButton::MenuButtonPopup);
 		sort_menu = new QMenu(tr("Sort menu"));
 		sort_button->setMenu(sort_menu);
-		QActionGroup *sort_group = new QActionGroup(sort_menu);
+		sort_group = new QActionGroup(sort_menu);
 		sort_group->setExclusive(true);
 		QSignalMapper *sort_mapper = new QSignalMapper(sort_menu);
 		for (int i = 0; i < column_names.size(); ++i) {
@@ -82,6 +82,7 @@ void Subscribers::buildToolBar() {
 			sort_mapper->setMapping(action, i);
 		}
 		connect(sort_mapper, SIGNAL(mapped(int)), this, SLOT(updateSort(int)));
+		connect(table_view->horizontalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(updateSort(int)));
 
 		QActionGroup *sort_order_group = new QActionGroup(tool_bar);
 		QSignalMapper *sort_order_mapper = new QSignalMapper(sort_order_group);
@@ -111,6 +112,7 @@ void Subscribers::updateSort() {
 
 void Subscribers::updateSort(int column_index) {
 	sort_column = column_index;
+	sort_group->actions().at(column_index)->setChecked(true);
 	updateSort();
 }
 
