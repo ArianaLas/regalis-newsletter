@@ -7,7 +7,7 @@
 #include "MainWindow.hpp"
 
 RegalisNewsletter::RegalisNewsletter() {
-	settings = new QSettings("Regalis", "regalis-newsletter");
+	settings = new QSettings("regalis", "regalis-newsletter");
 	wizard = NULL;
 }
 
