@@ -9,7 +9,10 @@
 #include <QMessageBox>
 #include <QSqlRecord>
 #include <QSqlError>
+#include <QStringList>
 #include <QDebug>
+#include <QToolButton>
+#include <QSignalMapper>
 
 #include "Subscribers.hpp"
 
@@ -17,24 +20,25 @@ Subscribers::Subscribers(QWidget *parent) : QWidget(parent) {
 	model = new TableModel();
 	model->setTable("subscribers");
 	model->setEditStrategy(QSqlTableModel::OnFieldChange);
-	model->setSort(0, Qt::AscendingOrder);
-	model->select();
+	sort_order = Qt::AscendingOrder;
+	sort_column = 0;
+	updateSort();
 
-	model->setHeaderData(0, Qt::Horizontal, tr("#id"));
-	model->setHeaderData(1, Qt::Horizontal, tr("Name"));
-	model->setHeaderData(2, Qt::Horizontal, tr("Surname"));
-	model->setHeaderData(3, Qt::Horizontal, tr("E-mail"));
-	model->setHeaderData(4, Qt::Horizontal, tr("Country"));
-	model->setHeaderData(5, Qt::Horizontal, tr("Province"));
-	model->setHeaderData(6, Qt::Horizontal, tr("City"));
-	model->setHeaderData(7, Qt::Horizontal, tr("Address"));
-	model->setHeaderData(8, Qt::Horizontal, tr("Sex"));
-	model->setHeaderData(9, Qt::Horizontal, tr("Birthday"));
+	column_names << tr("#id") << tr("Name") << tr("Surname") << tr("E-mail");
+	column_names << tr("Country") << tr("Province") << tr("City") << tr("Address");
+	column_names << tr("Sex") << tr("Birthday") << tr("Register date");
+	column_names << tr("Confirmation date");
+
+	for (int i = 0; i < column_names.size(); ++i) {
+		model->setHeaderData(i, Qt::Horizontal, column_names.at(i));
+	}
 
 	table_view = new QTableView(this);
 	table_view->setModel(model);
 	table_view->resizeColumnsToContents();
 	table_view->setContextMenuPolicy(Qt::CustomContextMenu);
+	table_view->setSelectionBehavior(QAbstractItemView::SelectRows);
+	table_view->setSelectionMode(QAbstractItemView::SingleSelection);
 	connect(table_view, SIGNAL(customContextMenuRequested(const QPoint&)), this, SLOT(tableContextMenu(const QPoint&)));
 
 	QVBoxLayout *layout = new QVBoxLayout(this);
@@ -56,10 +60,66 @@ void Subscribers::buildToolBar() {
 		tool_bar->setMovable(false);
 		tool_bar->addAction(tr("Groups"));
 		tool_bar->addAction(tr("Campaigns"));
-		tool_bar->addAction(tr("Sort"));
+
+		QToolButton *sort_button = new QToolButton();
+		QAction *sort_action = new QAction("Sort", 0);
+		connect(sort_action, SIGNAL(triggered()), sort_button, SLOT(showMenu()));
+		sort_button->setDefaultAction(sort_action);
+		sort_button->setPopupMode(QToolButton::MenuButtonPopup);
+		sort_menu = new QMenu(tr("Sort menu"));
+		sort_button->setMenu(sort_menu);
+		QActionGroup *sort_group = new QActionGroup(sort_menu);
+		sort_group->setExclusive(true);
+		QSignalMapper *sort_mapper = new QSignalMapper(sort_menu);
+		for (int i = 0; i < column_names.size(); ++i) {
+			QAction *action = sort_group->addAction(column_names.at(i));
+			action->setCheckable(true);
+			if (i == 0)
+				action->setChecked(true);
+			sort_menu->addAction(action);
+			connect(action, SIGNAL(triggered()), sort_mapper, SLOT(map()));
+			sort_mapper->setMapping(action, i);
+		}
+		connect(sort_mapper, SIGNAL(mapped(int)), this, SLOT(updateSort(int)));
+
+		QActionGroup *sort_order_group = new QActionGroup(tool_bar);
+		QSignalMapper *sort_order_mapper = new QSignalMapper(sort_order_group);
+		QAction *sort_as = sort_order_group->addAction(QIcon::fromTheme("view-sort-ascending"), tr("Sort ascending"));
+		sort_as->setCheckable(true);
+		sort_as->setChecked(true);
+		QAction *sort_de = sort_order_group->addAction(QIcon::fromTheme("view-sort-descending"), tr("Sort descending"));
+		sort_de->setCheckable(true);
+		sort_order_group->setExclusive(true);
+
+		connect(sort_as, SIGNAL(triggered()), sort_order_mapper, SLOT(map()));
+		connect(sort_de, SIGNAL(triggered()), sort_order_mapper, SLOT(map()));
+		sort_order_mapper->setMapping(sort_as, 0);
+		sort_order_mapper->setMapping(sort_de, 1);
+		connect(sort_order_mapper, SIGNAL(mapped(int)), this, SLOT(updateSortOrder(int)));
+
+		tool_bar->addWidget(sort_button);
+		tool_bar->addSeparator();
+		tool_bar->addAction(sort_as);
+		tool_bar->addAction(sort_de);
+}
+
+void Subscribers::updateSort() {
+	model->setSort(sort_column, sort_order);
+	model->select();
+}
+
+void Subscribers::updateSort(int column_index) {
+	sort_column = column_index;
+	updateSort();
+}
+
+void Subscribers::updateSortOrder(int order) {
+	sort_order = (Qt::SortOrder)order;
+	updateSort();
 }
 
 void Subscribers::tableContextMenu(const QPoint &pos) {
+	// TODO: allow multiple selection
 	QPoint globalPos = table_view->viewport()->mapToGlobal(pos);
 	int selected_row = table_view->indexAt(pos).row();
 	int model_id = model->record(selected_row).value("id").toInt();
@@ -139,7 +199,7 @@ void Subscribers::tableContextMenu(const QPoint &pos) {
 Subscribers::TableModel::TableModel() : QSqlTableModel() {}
 
 QString Subscribers::TableModel::selectStatement() const {
-	QString sql = QString("select id, name, surname, email, country, province, city, address, sex, birthday from %1 ").arg(tableName());
+	QString sql = QString("select id, name, surname, email, country, province, city, address, sex, birthday, registered, confirmed from %1 ").arg(tableName());
 	if (!filter().isEmpty())
 		sql += QString("where %1 ").arg(filter());
 	sql += orderByClause();
