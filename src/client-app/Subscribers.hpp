@@ -7,6 +7,7 @@
 #include <QObject>
 #include <QPoint>
 #include <QToolBar>
+#include <QActionGroup>
 
 class Subscribers : public QWidget {
 	Q_OBJECT;
@@ -21,6 +22,8 @@ class Subscribers : public QWidget {
 		QTableView *table_view;
 		QToolBar *tool_bar;
 		QMenu *sort_menu;
+		QActionGroup *sort_group;
+		QActionGroup *sort_order_group;
 		QString groups_filter;
 		QString campaigns_filter;
 		QStringList column_names;
