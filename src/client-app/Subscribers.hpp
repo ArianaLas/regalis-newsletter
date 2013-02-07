@@ -23,6 +23,7 @@ class Subscribers : public QWidget {
 		QToolBar *tool_bar;
 		QMenu *sort_menu;
 		QActionGroup *sort_group;
+		QActionGroup *sort_order_group;
 		QString groups_filter;
 		QString campaigns_filter;
 		QStringList column_names;

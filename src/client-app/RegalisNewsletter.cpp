@@ -1,5 +1,6 @@
 #include <QSqlDatabase>
 #include <QSqlError>
+#include <QMessageBox>
 #include <QDebug>
 
 #include "RegalisNewsletter.hpp"
@@ -29,7 +30,9 @@ void RegalisNewsletter::exec() {
 		wizard = new FirstRunWizard();
 		wizard->show();
 	} else {
-		initDatabase();
+		if (!initDatabase()) {
+			QMessageBox::critical(0, tr("Unable to connecto to database"), tr("Unable to connect to database, check you Internet connection and settings in your configuration file."));
+		}
 		initMainWindow();
 	}
 }

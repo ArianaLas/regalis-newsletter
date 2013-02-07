@@ -84,7 +84,7 @@ void Subscribers::buildToolBar() {
 		connect(sort_mapper, SIGNAL(mapped(int)), this, SLOT(updateSort(int)));
 		connect(table_view->horizontalHeader(), SIGNAL(sectionClicked(int)), this, SLOT(updateSort(int)));
 
-		QActionGroup *sort_order_group = new QActionGroup(tool_bar);
+		sort_order_group = new QActionGroup(tool_bar);
 		QSignalMapper *sort_order_mapper = new QSignalMapper(sort_order_group);
 		QAction *sort_as = sort_order_group->addAction(QIcon::fromTheme("view-sort-ascending"), tr("Sort ascending"));
 		sort_as->setCheckable(true);
@@ -111,13 +111,18 @@ void Subscribers::updateSort() {
 }
 
 void Subscribers::updateSort(int column_index) {
-	sort_column = column_index;
-	sort_group->actions().at(column_index)->setChecked(true);
-	updateSort();
+	if (sort_column == column_index) {
+		updateSortOrder((sort_order == 0 ? 1 : 0));
+	} else {
+		sort_column = column_index;
+		sort_group->actions().at(column_index)->setChecked(true);
+		updateSort();
+	}
 }
 
 void Subscribers::updateSortOrder(int order) {
 	sort_order = (Qt::SortOrder)order;
+	sort_order_group->actions().at(order)->setChecked(true);
 	updateSort();
 }
 
