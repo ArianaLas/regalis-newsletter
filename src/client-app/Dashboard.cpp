@@ -16,6 +16,7 @@ QToolBar *Dashboard::getToolBar() {
 	if(tool_bar == NULL) {
 		tool_bar = new QToolBar(tr("Dashboard Tool Bar"));
 		tool_bar->setMovable(false);
+		tool_bar->setStyleSheet("QToolBar { border: 0px }");
 	}
 	return tool_bar;
 }

@@ -151,4 +151,31 @@ insert into settings(name, bool_value) values ('register_form_language_required'
 insert into settings(name, bool_value) values ('register_form_sex_required', '0');
 insert into settings(name, bool_value) values ('register_form_use_campaigns', '0');
 insert into settings(name, bool_value) values ('register_form_save_user_agent', '0');
+insert into settings(name, int_value) values ('amount_of_unregistered_subscribers', '0'); 
+insert into settings(name, bool_value) values ('automatically_add_new_subscribers', '0');
 
+create view subscribers_count as 
+	select count(*) from subscribers;
+
+create view subscribers_count_groups as 
+	select id, name, count(*) from groups left join group_members on groups.id=group_members.group_id group by id order by name;
+
+create view subscribers_count_campaigns as 
+	select id, name, count(*) from campaigns left join campaigns_members on campaigns.id=campaigns_members.campaigns_id group by id order by name;
+
+create view newsletters_count as 
+	select count(*) from newsletter;
+/*
+create view days_since_last_newsletter as 
+	select extract(day from timestamp (select max(sent) from newsletters) - current_timestamp);
+
+create view new_subscribers_count as select count(*) from subscribers;
+
+create view emails_count_groups as select count(*) from subscribers;
+
+create view emails_count_campaigns as select count(*) from subscribers;
+
+create view unregistered_count as select count(*) from subscribers;
+
+create view unregistered_count_campaigns as select count(*) from subscribers;
+*/

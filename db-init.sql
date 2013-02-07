@@ -11,4 +11,4 @@ grant all on all tables in schema public to rnewslettercli;
 
 create role rnewslettersrv with login password 'regalis_newsletter_server';
 grant connect on database regalis_newsletter to rnewslettersrv;
-grant insert, update(confirmed) on subscribers to rnewslettersrv;
+grant insert, update(confirmed) on table subscribers to rnewslettersrv;
